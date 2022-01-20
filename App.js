@@ -13,6 +13,7 @@ import MessageScreen from './screens/MessageScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ResultsScreen from './screens/ResultsScreen';
+import ProductDetailScreen from './screens/ProductDetailScreen';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -24,6 +25,7 @@ function Explore() {
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Map" component={MapScreen} />
       <Stack.Screen name="Results" component={ResultsScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetailScreen} />
     </Stack.Navigator>
   );
 }

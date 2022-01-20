@@ -1,13 +1,36 @@
 import React, {useState} from 'react'
-import { View, StyleSheet, ImageBackground, Text, Dimensions, ScrollView, Image } from 'react-native'
+import { View, StyleSheet, ImageBackground, Text, Dimensions, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native'
 import MapView, {Marker} from 'react-native-maps';
 import {Stars} from '../components/stars';
+import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { OutlineButtonLarge, OutlineButtonSmall } from '../components/outlineButton';
+import { Modal, Portal, Provider } from 'react-native-paper';
+
 
 
 export default function ResultsScreen(props) {
+const [destination, setDestination] = useState('')
+const [visible, setVisible] = React.useState(false);
+
+const showModal = () => setVisible(true);
+const hideModal = () => setVisible(false);
+const containerStyle = {backgroundColor: 'white', padding: 20};
 
 return (
-  <View style={styles.container}>
+  <Provider>
+<View style={styles.container}>
+    <View style={styles.header}>
+    <OutlineButtonLarge title='marseille' name='search-outline'/>
+    <View style={styles.calendar}>
+    <Portal>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+          <Calendar/>
+        </Modal>
+    </Portal>
+    <OutlineButtonSmall title='start date' name='calendar-outline' onPress={showModal}/>
+    <OutlineButtonSmall title='end date' name='calendar-outline' onPress={showModal}/>
+    </View>
+    </View>
     <View style={styles.main}>
       <MapView style={styles.map}
       initialRegion={{
@@ -24,6 +47,7 @@ return (
     </View>
     
     <ScrollView style={styles.scroll}  horizontal>
+      <TouchableOpacity activeOpacity={1} style={styles.press} onPress={() => props.navigation.navigate('ProductDetails')}>
       <View style={styles.card}>
         <Image resizeMode='cover' source={require('../assets/bicycle.jpg')} style={styles.cardImage}/>
         <View style={styles.cardContainer}>
@@ -34,23 +58,22 @@ return (
           </View>  
         </View>
       </View>
-            <View style={styles.card}/>
-            <View style={styles.card}/>
+      </TouchableOpacity>
     </ScrollView>
   </View>
+  </Provider> 
+  
     )
 }
 
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#004282'
+      backgroundColor: "#004282"
     },
     header: {
         flex: 1, 
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-end',
+        paddingHorizontal: 20,
         justifyContent: 'center',
         marginTop: 15,
     },
@@ -63,7 +86,6 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height,
       },
     card: {
-        alignSelf: 'flex-end',
         width: 210,
         height: 180,
         backgroundColor: '#FFFFFF',
@@ -115,5 +137,24 @@ const styles = StyleSheet.create({
         elevation: 2,
         marginBottom: 20,
         padding: 15
-    }
+    },
+    input: {
+      marginTop: 20,
+      justifyContent: 'flex-start',
+      width: 325,
+      height: 50,
+      borderColor: '#E5E5E5',
+      backgroundColor: "#FFF",
+      borderWidth: 1,
+      paddingHorizontal: 20,
+      borderRadius: 50,
+  },
+  calendar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  press: {
+    alignSelf: 'flex-end'
+  }
 });

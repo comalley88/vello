@@ -17,7 +17,6 @@ const styles = StyleSheet.create({
     
 },
   appButtonContainer: {
-    marginTop: 40,
     alignSelf: 'center',
     justifyContent: "center",
     width: 275,
