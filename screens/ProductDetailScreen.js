@@ -7,7 +7,7 @@ import { Avatar } from 'react-native-paper';
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
-export default function ProductDetailScreen() {
+export default function ProductDetailScreen(props) {
 
     return (
         <View style={styles.container}>
@@ -31,7 +31,7 @@ export default function ProductDetailScreen() {
                             <Text style={styles.cardOwnerName}>Conor O'Malley</Text>
                         </View>
                     </View>
-                    <AppButton title='reserve'/>
+                    <AppButton title='reserve' onPress={() => props.navigation.navigate('BookingRequest')}/>
                 </View>
             </View>
         </View>

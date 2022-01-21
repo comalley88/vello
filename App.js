@@ -14,6 +14,9 @@ import ProfileScreen from './screens/ProfileScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ResultsScreen from './screens/ResultsScreen';
 import ProductDetailScreen from './screens/ProductDetailScreen';
+import BookingRequestScreen from './screens/BookingRequestScreen';
+import ListBikeScreen from './screens/ListBikeScreen';
+import ListBikePhotoScreen from './screens/ListBikePhotoScreen';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -26,6 +29,20 @@ function Explore() {
       <Stack.Screen name="Map" component={MapScreen} />
       <Stack.Screen name="Results" component={ResultsScreen} />
       <Stack.Screen name="ProductDetails" component={ProductDetailScreen} />
+      <Stack.Screen name="BookingRequest" component={BookingRequestScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function Profile() {
+  return (
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Profile" component={ProfileScreen} />
+      <Stack.Screen name="Results" component={ResultsScreen} />
+      <Stack.Screen name="ProductDetails" component={ProductDetailScreen} />
+      <Stack.Screen name="Listing" component={ListBikeScreen} />
+      <Stack.Screen name="Listing2" component={ListBikePhotoScreen} />
+      <Stack.Screen name="BookingRequest" component={BookingRequestScreen} />
     </Stack.Navigator>
   );
 }
@@ -55,9 +72,9 @@ const BottomNavigator = () => {
       }
      }}
     >
-    <Tab.Screen name="Maps" component={Explore} />
+    <Tab.Screen name="Map" component={Explore} />
     <Tab.Screen name="Messages" component={MessageScreen} />
-    <Tab.Screen name="Profile" component={ProfileScreen} />
+    <Tab.Screen name="Profile" component={Profile} />
   </Tab.Navigator>
   
   )
