@@ -1,26 +1,35 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { View, TextInput, StyleSheet, ImageBackground, Text } from 'react-native'
 import { Avatar } from 'react-native-paper';
 import { AppButton } from '../components/button';
+import { useDispatch, useSelector } from 'react-redux';
+import { placeCoords } from '../features/coords';
+import { GooglePlacesInput } from '../components/googlePlacesInput';
 
 export default function MapScreen(props) {
-    const [destination, setDestination] = useState('')
 
+    const token  = useSelector((state) => state.token.value)
 
+    const coords  = useSelector((state) => state.coords.value)
+
+    console.log('coords are', coords)
+    
     return (
-        <View style={styles.container}>
+            <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Hi Julien</Text>
                 <Avatar.Image size={80} source={require('../assets/profile.jpg')}/>
             </View>
             <ImageBackground source={require('../assets/search.jpg')} style={styles.main}>
-            <TextInput style={styles.input} placeholder='where you going?' onChangeText={(value) => setDestination(value)}/>
-            <AppButton title='search' onPress={() => props.navigation.navigate('Results')}/>
+            <View style={styles.searchContainer}>
+            <GooglePlacesInput/>
+            <AppButton title='search' onPress={props.navigation.navigate('Results')}/>
+            </View>
             </ImageBackground>
         </View>
+        
     )
 }
-
 const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -41,18 +50,11 @@ const styles = StyleSheet.create({
     },
     main: {
         flex: 4,
-        backgroundColor: '#FFFFFF'
+        backgroundColor: '#FFFFFF',
     },
-    input: {
-        alignSelf: 'center',
-        marginTop: 120,
-        justifyContent: 'flex-start',
-        width: 325,
-        height: 50,
-        backgroundColor:'#FFFFFF',
-        borderColor: '#E5E5E5',
-        borderWidth: 1,
-        paddingHorizontal: 20,
-        borderRadius: 50,
-    },
+    searchContainer: {
+        height: '60%',
+        alignItems: 'center',
+        justifyContent: 'space-evenly'
+    }
 });

@@ -1,27 +1,89 @@
 import React, {useState} from 'react'
-import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, Text, Button, StyleSheet, TextInput, TouchableOpacity, Ani } from 'react-native'
 import { AppButton } from '../components/button';
+import { useSelector, useDispatch } from 'react-redux'
+import { userToken } from '../features/token';
+import { Formik } from 'formik'
+import * as yup from 'yup';
+
+const registerValidation = yup.object().shape({
+  firstName: yup.string().required('First name is required'),
+  lastName: yup.string().required('Last name is required'),
+  email: yup.string().email('Please enter a valid email').required('email address is required'),
+  password: yup.string().min(8, ({min}) => `password must be at least ${min} characters`).required('password is required'),
+});
 
 export default function RegisterScreen(props) {
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
 
+
+
+    const dispatch = useDispatch()
+  
     return (
+      <Formik
+     initialValues={{ email: '', firstName: '', lastName: '', password: '' }}
+     validateOnMount={true}
+     onSubmit={ async values => {
+
+        var rawResponse = await fetch('https://vello.herokuapp.com/signup', {
+          method: 'POST',
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+          body: `firstName=${values.firstName}&lastName=${values.lastName}&email=${values.email}&password=${values.password}`
+          });
+  
+        var response = await rawResponse.json();
+        
+        dispatch(userToken(response.token));
+  
+        props.navigation.navigate('BottomNavigator', {screen: 'Map'})
+  
+     }}
+     validationSchema={registerValidation}
+   >
+     {({ handleChange, handleBlur, handleSubmit, values, touched, errors, isValid }) => (
         <View style={styles.container}>
             <View style={styles.header}>
             <Text style={styles.headerTitle}>Register</Text>
             </View>
             <View style={styles.main}>
-            <TextInput style={styles.input} placeholder='enter your first name' onChangeText={(value) => setFirstName(value)}/>
-            <TextInput style={styles.input} placeholder='enter your last name' onChangeText={(value) => setLastName(value)}/>
-            <TextInput style={styles.input} keyboardType="email-address" placeholder='enter your email' onChangeText={(value) => setEmail(value)}/>
-            <TextInput style={styles.input} secureTextEntry={true} placeholder='enter your password' onChangeText={(value) => setPassword(value)}/>
-            <AppButton title='Register' onPress={() => props.navigation.navigate('BottomNavigator', {screen: 'Map'})}/>
+            <TextInput 
+            onChangeText={handleChange('firstName')}
+            onBlur={handleBlur('firstName')}
+            value={values.firstName}
+            style={styles.input} placeholder='enter your first name'/>
+            {(errors.firstName && touched.firstName) &&
+            <Text style={styles.errorMessage}>{errors.firstName}</Text>
+            }
+            <TextInput 
+            onChangeText={handleChange('lastName')}
+            onBlur={handleBlur('lastName')}
+            value={values.lastName}
+            style={styles.input} placeholder='enter your last name'/>
+            {(errors.lastName && touched.lastName) &&
+            <Text style={styles.errorMessage}>{errors.lastName}</Text>
+            }
+            <TextInput
+            onChangeText={handleChange('email')}
+            onBlur={handleBlur('email')}
+            value={values.email}
+            style={styles.input} keyboardType="email-address" placeholder='enter your email' />
+            {(errors.email && touched.email) &&
+            <Text style={styles.errorMessage}>{errors.email}</Text>
+            }
+            <TextInput
+            onChangeText={handleChange('password')}
+            onBlur={handleBlur('password')}
+            value={values.password}
+            style={styles.input} secureTextEntry={true} placeholder='enter your password'/>
+            {(errors.password && touched.password) &&
+            <Text style={styles.errorMessage}>{errors.password}</Text>
+            }
+            <AppButton title='Register' onPress={handleSubmit}/>
             <Text style={styles.footer}>Already have an account? <Text onPress={() => props.navigation.navigate('Login')} style={styles.signinLink} >signin</Text></Text>
             </View>  
         </View>
+        )}
+        </Formik>
     )
 }
 
@@ -68,5 +130,8 @@ const styles = StyleSheet.create({
     footer: {
         marginTop: 60,
         alignSelf: 'center'
+    },
+    errorMessage: {
+      color: '#FF0000'
     }
 });

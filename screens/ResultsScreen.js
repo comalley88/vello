@@ -2,40 +2,78 @@ import React, {useState} from 'react'
 import { View, StyleSheet, ImageBackground, Text, Dimensions, ScrollView, Image, TextInput, TouchableOpacity } from 'react-native'
 import MapView, {Marker} from 'react-native-maps';
 import {Stars} from '../components/stars';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
+import { CalendarStartDate, CalendarEndDate } from '../components/calendar';
 import { OutlineButtonLarge, OutlineButtonSmall } from '../components/outlineButton';
 import { Modal, Portal, Provider } from 'react-native-paper';
+import { useSelector } from 'react-redux';
+import { GooglePlacesInput } from '../components/googlePlacesInput';
+import { AppButton } from '../components/button';
 
 
 
 export default function ResultsScreen(props) {
-const [destination, setDestination] = useState('')
-const [visible, setVisible] = React.useState(false);
+
+const coords  = useSelector((state) => state.coords.value)
+
+const reducerDate  = useSelector((state) => state.startDate.value)
+const reducerEndDate  = useSelector((state) => state.endDate.value)
+
+console.log("reducer end date is", reducerEndDate)
+
+
+const [visible, setVisible] = useState(false);
 
 const showModal = () => setVisible(true);
 const hideModal = () => setVisible(false);
 const containerStyle = {backgroundColor: 'white', padding: 20};
 
+const [visibleSearch, setVisibleSearch] = useState(false);
+
+const showModalSearch = () => setVisibleSearch(true);
+const hideModalSearch = () => setVisibleSearch(false);
+
+const handleSubmit = () => setVisibleSearch(false)
+const containerStyleSearch = {backgroundColor: 'white', padding: 20, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start'};
+
+const [visibleEndDate, setVisibleEndDate] = useState(false);
+
+const showModalEndDate = () => setVisibleEndDate(true);
+const hideModalEndDate = () => setVisibleEndDate(false);
+
+const startDate = reducerDate || 'start date'
+const endDate = reducerEndDate || 'end date'
+
 return (
   <Provider>
+     <Portal>
+        <Modal visible={visibleSearch} onDismiss={hideModalSearch} contentContainerStyle={containerStyleSearch}>
+        <GooglePlacesInput/>
+        <AppButton style={styles.searchButton}  title='search' onPress={() => handleSubmit() }/>
+        </Modal>
+    </Portal>
 <View style={styles.container}>
     <View style={styles.header}>
-    <OutlineButtonLarge title='marseille' name='search-outline'/>
+    <OutlineButtonLarge title={coords?.formatted_address} onPress={showModalSearch}/>
     <View style={styles.calendar}>
     <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-          <Calendar/>
+          <CalendarStartDate/>
         </Modal>
     </Portal>
-    <OutlineButtonSmall title='start date' name='calendar-outline' onPress={showModal}/>
-    <OutlineButtonSmall title='end date' name='calendar-outline' onPress={showModal}/>
+    <OutlineButtonSmall title={startDate} name='calendar-outline' onPress={showModal}/>
+    <Portal>
+        <Modal visible={visibleEndDate} onDismiss={hideModalEndDate} contentContainerStyle={containerStyle}>
+          <CalendarEndDate/>
+        </Modal>
+    </Portal>
+    <OutlineButtonSmall title={reducerEndDate} name='calendar-outline' onPress={showModalEndDate}/>
     </View>
     </View>
     <View style={styles.main}>
       <MapView style={styles.map}
-      initialRegion={{
-      latitude: 43.2965,
-      longitude: 5.3698,
+      region={{
+      latitude: coords?.geometry?.location?.lat,
+      longitude: coords?.geometry?.location?.lng,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
       }}
@@ -156,5 +194,8 @@ const styles = StyleSheet.create({
   },
   press: {
     alignSelf: 'flex-end'
+  },
+  searchButton: {
+    marginTop: 40,
   }
 });

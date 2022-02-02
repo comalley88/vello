@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {Text, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {Text, StyleSheet, TouchableOpacity, View, TextInput} from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const OutlineButtonLarge = ({ onPress, title, name }) => {
@@ -18,6 +18,13 @@ const OutlineButtonSmall = ({ onPress, title, name }) => {
      </View>
    </TouchableOpacity>
  );}
+
+const InputSearchBox = ({onChangeText, text, iconName}) => {
+  return (
+    <TextInput style={styles.input} onChangeText={onChangeText}
+    value={text}><Ionicons name={iconName} size={20} style={styles.appButtonIcon}/></TextInput>
+  )
+}
 
 const styles = StyleSheet.create({
   appButtonText: {
@@ -59,8 +66,18 @@ appButtonWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-}
+},
+input: {
+  marginTop: 20,
+  justifyContent: 'space-between',
+  width: 325,
+  height: 50,
+  backgroundColor: '#FFFFFF',
+  borderWidth: 1,
+  paddingHorizontal: 20,
+  borderRadius: 50,
+},
 });
 
 
-export {OutlineButtonLarge, OutlineButtonSmall }
+export {OutlineButtonLarge, OutlineButtonSmall, InputSearchBox }

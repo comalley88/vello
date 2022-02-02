@@ -1,7 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
-import {ImageBackground, Text} from 'react-native'
-import styled from "styled-components"
-
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,6 +15,25 @@ import ListBikeScreen from './screens/ListBikeScreen';
 import ListBikePhotoScreen from './screens/ListBikePhotoScreen';
 
 import { Ionicons } from '@expo/vector-icons';
+
+
+import { Provider } from 'react-redux'
+import { configureStore } from '@reduxjs/toolkit';
+import tokenReducer from './features/token';
+import coordsReducer from './features/coords';
+import dateReducer from './features/date';
+import endDateReducer from './features/endDate'
+
+export const store = configureStore({
+  reducer: {
+    token: tokenReducer,
+    coords: coordsReducer,
+    startDate: dateReducer,
+    endDate: endDateReducer
+  },
+});
+
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -82,7 +97,7 @@ const BottomNavigator = () => {
 
 export default function App() {
   return (
-
+    <Provider store={store}>
     <NavigationContainer>
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={HomeScreen} />
@@ -90,41 +105,9 @@ export default function App() {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="BottomNavigator" component={BottomNavigator} />
     </Stack.Navigator>
-  </NavigationContainer>
+    </NavigationContainer>
+    </Provider>
+    
 
-    // <StyledBackground source={require('./assets/background.jpg')}>
-    // <Circle>
-    //   <Text>Vello</Text>
-    // </Circle>
-    // <StyledText>Hello World!</StyledText>
-    // </StyledBackground>
   );
 }
-
-const StyledView = styled.View`
-  background-color: papayawhip;
-  height: 100%
-`
-
-const StyledText = styled.Text`
-  color: red;
-`
-
-const StyledBackground = styled.ImageBackground`
-  height: 100%;
-  flex: 1;
-  align-items: center;
-  justify-content: center
-`
-
-const Circle = styled.View`
-height: 200px;
-width: 200px;
-background-color: #004282;
-opacity: 0.8;
-border-radius: 100;
-align-items: center;
-justify-content: center
-
-`
-
