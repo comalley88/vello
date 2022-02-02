@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const GooglePlacesInput = () => {
 
-    const googleAPI = 'AIzaSyB9DOh4EbDJbGIVSqqfNepLvw4juuVorF4'
+    const googleAPI = ''
     const dispatch = useDispatch()
   return (
     <GooglePlacesAutocomplete
